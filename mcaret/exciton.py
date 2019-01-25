@@ -21,11 +21,31 @@ import excitonPlotter
 # point class
 class Point:
     # constructor requires position in lattice
-    def __init__(self, i,j,k):
+    # as well as unique integer ID making the point hashable
+    def __init__(self, i,j,k,uniqueID):
         self.i = i
         self.j = j
         self.k = k
+        self.uniqueID = uniqueID
 
+    def __hash__(self):
+        return hash( self.uniqueID )
+
+    def __eq__(self , other ):
+        if( other.i == self.i and other.j == self.j and other.k == self.k ):
+            return(True)
+        else:
+            return(False)
+
+    def __ne__(self , other):
+        if( other.i == self.i and other.j == self.j and other.k == self.k ):
+            return(False)
+        else:
+            return(True)
+
+# Point iterator
+# 0   ->   1   ->   2   ->  ...
+# ijk -> i+1jk -> i-1jk -> ij+1k -> ij-1k -> ijk+1 -> ijk-1
 
 ####################################################################
 #
