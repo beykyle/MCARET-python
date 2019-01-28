@@ -99,60 +99,35 @@ def hop( index , exciton , exciton_pairs , excitons , other_excitons ):
 ####################################################################
 
 
-# we'll start with a naive, fully analog, implementation
-# the entire simulation will have a time complexity of
-# O( N * (s^2 + t^2) ) where: N is the number of time steps,
-# s is the number of singlets and t the number of triplets
-
-
-def updateSystem( choice ,  singlets , triplets , singlet_pairs , triplet_pairs ):
-    print("updating system: " + str(len(singlets)) + " singlets, " + str(len(triplets)) + " triplets")
-    print("                 " + str(len(singlet_pairs)) +
-          " singlet pairs, "  + str(len(triplet_pairs)) + " triplet_pairs")
+# given the choice of next event, updates the occupation function and tallies light output
+def updateSystem( choice ,  occFunc , time , light_times):
 
     if choice == 0:
-        #fluoresce - uniformly random sample one of the singlets
-        del singlets[np.random.choice( len(singlets) ) ]
-        # append to fluoresce times
         light_times.append(time)
 
     elif choice == 1:
-        #phosphoresce - uniformly random sample one of the triplets
-        del triplets[np.random.choice( len(triplets)) ]
-        # append to fluoresce times
         light_times.append(time)
 
     elif choice == 2:
         #TT annhilate - uniformly random sample one of the triplet pairs to annhilate
-        (t1 , t2) = triplet_pairs[ np.random.choice( len(triplet_pairs)) ]
-        # but first, add a singlet at the annhilation site
-        # for now, just use the first triplet in the pair
-        singlets.append( Point( triplets[t1].i  , triplets[t1].j , triplets[t1].k ) )
-        # now, delete the two triplets
-        del triplets[t1]
-        del triplets[t2 -1] # because the first deletion shifts everything back
+        pass
 
     elif choice == 3:
         #SS quench - uniformly random sample one of the singlet pairs to annhilate
-        (s1 , s2) = singlet_pairs[ np.random.choice( len(singlet_pairs)) ]
-        # but first, add a singlet at the annhilation site
-        # for now, just keep the first singlet as the product, and delete the other one
-        del singlets[s2]
+        pass
 
     elif choice == 4:
         ## transport - randomly choose an exciton to transport and hop it to an unnocupied neighboring cell
-        e = np.random.choice( len(singlets) + len(triplets) )
-        if  e < len(singlets):
-            hopped_singlet = hop(e , singlets[e] , singlet_pairs , singlets , triplets )
-            singlets[e] = hopped_singlet
-        else:
-            e = e - len(singlets)
-            hopped_triplet = hop(e , triplets[e] , triplet_pairs , triplets, singlets)
-            triplets[e - len(singlets)] = hopped_triplet
+        # For now, do not distinguish between triplets and singlets
+        p = np.random.choice( list( occFunc.keys()  ) )
+        while not occFunc.randomSingleHop(p):
+            p = np.random.choice( list( occFunc.keys() ) )
+
+    return( occFunc , light_times)
 
 # given an initial condition in the form of a list of singlets and triplets
 # runs full kinetic monte carlo simualtion for N time steps
-def transport( singlets , triplets , N  , ratePhysics ):
+def transport( N  , ratePhysics , occFunc ):
 
     # to reconstruct pulse shape, every light emission will be time tagged
     light_times = []
@@ -160,15 +135,9 @@ def transport( singlets , triplets , N  , ratePhysics ):
     # start time at 0
     time = 0
 
-    # initialize some values
-    num_singlets = 0
-    num_triplets = 0
-    triplet_pairs = []
-    singlet_pairs = []
-
     for i in range(N):
         # calculate rates
-        rates = ratePhysics.getRates( singlets , triplets )
+        rates = ratePhysics.getRates( occFunc )
 
         # get total rate and sample timestep from an exponential distribution
         totalRate = sum(rates)
@@ -178,7 +147,7 @@ def transport( singlets , triplets , N  , ratePhysics ):
         rates = rates / totalRate
         choice = np.random.choice(5, p=rates)
 
-        updateSystem( choice , singlets , triplets , singlet_pairs, triplet_pairs )
+        occFunc , light_times = updateSystem( choice , occFunc , time , light_times )
 
     return(light_times)
 

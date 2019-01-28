@@ -19,6 +19,8 @@ from pairWiseRatePhysics import PairWiseRatePhysics , readRateConstants
 from exciton import randomInitialDistribution as randInit
 import excitonPlotter
 import pulsePlotter
+from occupationFunction import OccupationFunction
+
 
 def parseConfig( filename , required_fields ):
     print("Reading from " + filename )
@@ -58,19 +60,19 @@ def main():
     side_length = float( config['Setup']["cube_side_length"] )
     time_steps = int( config['Setup']["time_steps"] )
 
-    print(" beginning simulation with " + str(num_triplets) + " triplets, and" + \
+    print(" beginning simulation with " + str(num_triplets) + " triplets, and " + \
           str(num_singlets) + " singlets.")
     print("Using a cubic geometry with side length " + str(side_length) )
     print("Running for " + str(time_steps) + " time steps")
 
-    singlets , triplets = randInit( num_triplets , num_singlets , side_length)
+    occFunc = OccupationFunction( num_singlets , num_triplets , randInit , side_length )
     print("Generated initial condition")
 
     # generate rate physics object
     rp = readRateConstants( config )
 
     print("Running transport...")
-    times = transport.transport( singlets , triplets , time_steps , rp )
+    times = transport.transport( time_steps , rp , occFunc )
     print("Transport finished")
     print("Plotting results...")
     pulsePlotter.plotPulse( times )

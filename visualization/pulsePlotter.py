@@ -18,7 +18,7 @@ def plotPulse( times ):
   ax = fig.add_subplot(111)
 
   ax.set_xlabel(r"time [a.u.]")
-  ax.set_ylabel(r"$light-emitting decays$")
+  ax.set_ylabel(r"light-emitting decays")
 
   params = {'legend.fontsize': 22,
             'axes.labelsize': 20,

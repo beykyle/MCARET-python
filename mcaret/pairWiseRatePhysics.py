@@ -10,43 +10,7 @@ import configparser
 __author__ = "Kyle Beyer"
 
 import exciton
-
-####################################################################
-#
-# Exciton pair wise geometry
-####################################################################
-
-# Now we need to set up our helper functions that our transport
-# kernel will call to get all the stats needed to calculate the rates
-
-# returns true if pair of excitons are direct neighbors, false otherwise
-def areNeighbors( e1 , e2 ):
-    if  abs(e1.i - e2.i) <= 1 and \
-        abs(e1.j - e2.j) <= 1 and \
-        abs(e1.k - e2.k) <= 1 and \
-        abs( e1.i - e2.i + e1.k - e2.k + e1.j - e2.j) == 1:
-        return( True )
-    else:
-        return( False )
-
-# returns a list of tuples, giving the indices of the pair in the exciton list
-# for now we will implement the brute force algorithm
-# So that each pair is compared once. O(n^2); exactly (n-1)*n/2
-def selectPairsFromList( excitonList ):
-    pairs = []
-    for i , exciton in enumerate(excitonList[:-1]):
-        for j in range(i+1,len(excitonList)):
-            if areNeighbors(exciton , excitonList[j]):
-                pairs.append( (i , j) )
-    return(pairs)
-
-# returns the required stats
-def calculateExcitonStats(singlets , triplets):
-    return( len(singlets) ,
-            len(triplets) ,
-            selectPairsFromList( triplets ) ,
-            selectPairsFromList( singlets ) )
-
+from occupationFunction import OccupationFunction
 ####################################################################
 #
 # Rate physics
@@ -67,15 +31,30 @@ class PairWiseRatePhysics:
         self.k_SS_quench = k_SS_quench
         self.k_transport = k_transport
 
-    def getRates(self, singlets , triplets ):
-        ( num_singlets  , num_triplets , \
-         triplet_pairs , singlet_pairs  ) = calculateExcitonStats( singlets , triplets)
+    # simply gets the number of direct triplet neighbors and direct singlet neighbors
+    # Linear time - runs through all occupied points and checks for neighbors with
+    # constant time lookups at each one
 
+    def getRateMultipliers( self , occFunc):
+        num_singlet_pairs , num_triplet_pairs , num_singlets ,  num_triplets =  0 , 0 , 0 , 0
+        for point , status in occFunc.items():
+            singlet_neighbors , triplet_neighbors = occFunc.checkForNeighbors( point.i , point.j , point.k )
+            if status: # Status == True -> triplet
+                num_triplets = num_triplets + 1
+                num_triplet_pairs = num_triplet_pairs + len( triplet_neighbors )
+            else: # staus == False -> singlet
+                num_singlets = num_singlets + 1
+                num_singlet_pairs = num_singlet_pairs + len( singlet_neighbors )
+        return(num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs )
+
+
+    def getRates(self, occFunc ):
+        num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs = self.getRateMultipliers( occFunc )
         # calculate rates, populating rate array
         rates = np.array([ self.fluorescenceRate(num_singlets)            , \
                            self.phosphorescenceRate(num_triplets)         , \
-                           self.TT_annhilationRate( len(triplet_pairs) )  , \
-                           self.SS_quenchRate( len(singlet_pairs) )       , \
+                           self.TT_annhilationRate( num_triplet_pairs )  , \
+                           self.SS_quenchRate( num_singlet_pairs )       , \
                            self.transportRate()                            ])
         return(rates)
 
