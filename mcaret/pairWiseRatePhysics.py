@@ -35,21 +35,8 @@ class PairWiseRatePhysics:
     # Linear time - runs through all occupied points and checks for neighbors with
     # constant time lookups at each one
 
-    def getRateMultipliers( self , occFunc):
-        num_singlet_pairs , num_triplet_pairs , num_singlets ,  num_triplets =  0 , 0 , 0 , 0
-        for point , status in occFunc.items():
-            singlet_neighbors , triplet_neighbors = occFunc.checkForNeighbors( point.i , point.j , point.k )
-            if status: # Status == True -> triplet
-                num_triplets = num_triplets + 1
-                num_triplet_pairs = num_triplet_pairs + len( triplet_neighbors )
-            else: # staus == False -> singlet
-                num_singlets = num_singlets + 1
-                num_singlet_pairs = num_singlet_pairs + len( singlet_neighbors )
-        return(num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs )
-
-
     def getRates(self, occFunc ):
-        num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs = self.getRateMultipliers( occFunc )
+        num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs = occFunc.getPairwiseRateMultipliers()
         # calculate rates, populating rate array
         rates = np.array([ self.fluorescenceRate(num_singlets)            , \
                            self.phosphorescenceRate(num_triplets)         , \

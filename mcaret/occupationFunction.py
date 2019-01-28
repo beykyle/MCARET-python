@@ -6,32 +6,21 @@
 import numpy as np
 import math
 import sys
-from collections import defaultdict
+from randomdict import RandomDict
+
 
 
 __author__ = "Kyle Beyer"
 
 from exciton import Point
 
-# True is triplet, false is singlet, None
-class OccupationStatus:
-    def __init__(singlet=True):
-        self.singlet = False
-        if singlet:
-            self.singlet = True
-
 class OccupationFunction:
     def __init__(self , numSinglets , numTriplets , initialConditionGenerator , sideLength ):
-        occFunc = defaultdict(lambda: None)
-        self.num_triplets = numTriplets
-        self.num_singlets = numSinglets
-        self.occFunc = initialConditionGenerator( numSinglets , numTriplets , sideLength ,  occFunc )
-
-    def items(self):
-        return( self.occFunc.items() )
-
-    def keys(self):
-        return( self.occFunc.keys() )
+        self.occFunc = RandomDict() # map :  Point -> OccupationStatus
+        self.singlets = RandomDict()
+        self.triplets = RandomDict()
+        initialConditionGenerator( numSinglets  , numTriplets   , sideLength ,
+                                   self.occFunc , self.singlets , self.triplets )
 
     def checkStatus(self , p , tripletNeighbors , singletNeighbors):
         if p in self.occFunc:
@@ -42,6 +31,19 @@ class OccupationFunction:
                 singletNeighbors.append(p)
 
         return( tripletNeighbors , singletNeighbors )
+
+    # main exciton loop in pairwise transport
+    def getPairwiseRateMultipliers(self):
+        num_singlets , num_triplets =  len(self.singlets) , len(self.triplets)
+        num_singlet_pairs , num_triplet_pairs = 0 , 0
+        for point , status in self.occFunc.items():
+            singlet_neighbors , triplet_neighbors = self.checkForNeighbors( point.i , point.j , point.k )
+            if status: # Status == True -> triplet
+                num_triplet_pairs = num_triplet_pairs + len( triplet_neighbors )
+            else: # staus == False -> singlet
+                num_singlet_pairs = num_singlet_pairs + len( singlet_neighbors )
+
+        return(num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs )
 
     def checkForNeighbors(self,  i , j , k ):
         singletNeighbors = []
@@ -66,15 +68,58 @@ class OccupationFunction:
 
         return( singletNeighbors , tripletNeighbors )
 
-    def eliminateExciton( self, p ):
-          del self.occFunc[p]
+    def eliminateRandomSinglet(self):
+        ## Flourescence - S_1 -> S_0 + hnu
+        # randomly select a singlet and remove it from occFunc
+        p = self.singlets.random_key()
+
+        if p not in self.occFunc:
+            print("p not in occFunc!")
+            print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
+            print("length of occFunc:")
+            print(len(self.occFunc))
+            print("length of singlets:")
+            print(len(self.singlets))
+            print("contents of occFunc:")
+            for p , value in self.occFunc.items():
+                print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
+
+            print("Contents of singlets:")
+            for p , value in self.singlets.items():
+                print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
+            print("  ")
+            if p not in self.singlets:
+                print("Impossible!")
+
+        del self.occFunc[p]
+        del self.singlets[p]
+
+    def eliminateRandomTriplet(self):
+        ## Phosphorescence - T_1 -> S_0 + hnu
+        # randomly select a triplet and remove it from occFunc
+        p = self.triplets.random_key()
+        del self.occFunc[p]
+        del self.triplets[p]
+
+    def singletQuench(self):
+        #SS quench - uniformly random sample one of the singlet pairs to annhilate
+        pass
+
+    def tripletAnnhilate(self):
+        #TT annhilate - uniformly random sample one of the triplet pairs to annhilate
+        pass
+
+    def randomExcitonRandomWalk(self):
+        p = self.occFunc.random_key()
+        while not self.randomDirectionSingleHop(p):
+            p = self.occFunc.random_key()
 
     # Attempts to randomly chooose from the unoccupied indices directly
     # neighboring p. If succesful, deletes the value at p in self.occFunc
     # and add the same value at the randomly chosen, neighboring  point,
     # and returns True.
     # If there are no unnoccupied neighboring indices, returns False
-    def randomSingleHop( self , p ):
+    def randomDirectionSingleHop( self , p ):
         i , j , k = p.i , p.j , p.k
         successfulMove = False
         numTries = 0
