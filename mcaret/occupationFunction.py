@@ -148,9 +148,16 @@ class OccupationFunction:
             # Check if new point is already occupied
             pNew = Point(i,j,k)
             if pNew not in self.occFunc:
-                  successfulMove = True
-                  # delete the old point and make a new one
-                  self.occFunc[pNew] = self.occFunc[p]
-                  del self.occFunc[p]
+                successfulMove = True
+                # delete the old point and make a new one
+                self.occFunc[pNew] = self.occFunc[p]
+                if self.occFunc[p]: # Triplet
+                    self.triplets[pNew] = True
+                    del self.triplets[p]
+                else:
+                    self.singlets[pNew] = True
+                    del self.singlets[p]
+                del self.occFunc[p]
+
 
         return(successfulMove)

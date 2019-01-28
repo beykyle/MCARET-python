@@ -63,6 +63,10 @@ def transport( N  , ratePhysics , occFunc ):
         rates = rates / totalRate
         choice = np.random.choice(5, p=rates)
 
+        if totalRate == 0:
+            print("System relaxed")
+            break
+
         occFunc , light_times = updateSystem( choice , occFunc , time , light_times )
 
     return(light_times)

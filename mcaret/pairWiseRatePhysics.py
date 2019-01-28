@@ -38,11 +38,11 @@ class PairWiseRatePhysics:
     def getRates(self, occFunc ):
         num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs = occFunc.getPairwiseRateMultipliers()
         # calculate rates, populating rate array
-        rates = np.array([ self.fluorescenceRate(num_singlets)            , \
-                           self.phosphorescenceRate(num_triplets)         , \
-                           self.TT_annhilationRate( num_triplet_pairs )  , \
-                           self.SS_quenchRate( num_singlet_pairs )       , \
-                           self.transportRate()                            ])
+        rates = np.array([ self.fluorescenceRate(num_singlets)              , \
+                           self.phosphorescenceRate(num_triplets)           , \
+                           self.TT_annhilationRate( num_triplet_pairs )     , \
+                           self.SS_quenchRate( num_singlet_pairs )          , \
+                           self.transportRate( num_singlets + num_triplets)  ])
         return(rates)
 
     # fluorescence is a linear rate
@@ -62,8 +62,8 @@ class PairWiseRatePhysics:
         return( self.k_phosphorescence * num_triplets )
 
     # for now we will model transport as a constant scalar rate
-    def transportRate(self ):
-        return( self.k_transport)
+    def transportRate(self , num_excitons):
+        return( self.k_transport * num_excitons )
 
 
 ####################################################################
