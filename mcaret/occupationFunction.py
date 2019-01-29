@@ -98,13 +98,32 @@ class OccupationFunction:
         del self.occFunc[p]
         del self.triplets[p]
 
+    def linearSelectFromPair( self, excitonMap, singlet=True ):
+        pairs = RandomDict()
+        for key , val in excitonMap.items():
+            singletNeighbors , tripletNeighbors = self.checkForNeighbors(key.i  , key.j , key.k)
+            neighbors = []
+            if singlet:
+                neighbors = singletNeighbors
+            else:
+                neighbors = tripletNeighbors
+
+            pairs[key] = neighbors
+
+        # select a pair and return
+        return( pairs.random_key() )
+
     def singletQuench(self):
         #SS quench - uniformly random sample one of the singlet pairs to annhilate
-        pass
+        pair = self.linearSelectFromPair(self.singlets ,  singlet=True)
+        del self.singlets[pair]
+        del self.occFunc[pair]
 
     def tripletAnnhilate(self):
         #TT annhilate - uniformly random sample one of the triplet pairs to annhilate
-        pass
+        pair = self.linearSelectFromPair(self.triplets ,  singlet=False)
+        del self.triplets[pair]
+        del self.occFunc[pair]
 
     def randomExcitonRandomWalk(self):
         p = self.occFunc.random_key()
