@@ -16,11 +16,11 @@ sys.path.append('./output/')
 
 import transport
 from pairWiseRatePhysics import PairWiseRatePhysics , readRateConstants
+from boundaryCondition import RectangularPeriodicBoundaryCondition , readBoundaryCondition
 from exciton import randomInitialDistribution as randInit
 import excitonPlotter
 import pulsePlotter
 from occupationFunction import OccupationFunction
-
 
 def parseConfig( filename , required_fields ):
     print("Reading from " + filename )
@@ -47,8 +47,7 @@ def main():
 
     filename = sys.argv[1]
 
-    required_fields = ['cube_side_length' , 'num_excitons' ,
-                       'triplet_fraction' ,  'time_steps'   ]
+    required_fields = ['num_excitons' , 'triplet_fraction' ,  'time_steps'   ]
 
     config = parseConfig( filename , required_fields )
 
@@ -57,19 +56,24 @@ def main():
     num_singlets =  int( math.floor( float(config['Setup']['num_excitons']) *
                          ( 1 - float(config['Setup']["triplet_fraction"] ) ) ) )
 
-    side_length = float( config['Setup']["cube_side_length"] )
     time_steps = int( config['Setup']["time_steps"] )
 
-    print(" beginning simulation with " + str(num_triplets) + " triplets, and " + \
+    print("Beginning simulation with " + str(num_triplets) + " triplets, and " + \
           str(num_singlets) + " singlets.")
-    print("Using a cubic geometry with side length " + str(side_length) )
     print("Running for " + str(time_steps) + " time steps")
 
-    occFunc = OccupationFunction( num_singlets , num_triplets , randInit , side_length )
-    print("Generated initial condition")
 
     # generate rate physics object
+    print("Reading rate constants...")
     rp = readRateConstants( config )
+
+    # generate boundary conditions object
+    print("Reading boundary condition...")
+    bc = readBoundaryCondition( config )
+
+    # generate occupation function
+    print("Generating initial condition...")
+    occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
 
     print("Running transport...")
     times = transport.transport( time_steps , rp , occFunc )

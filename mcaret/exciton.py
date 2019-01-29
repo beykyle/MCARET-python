@@ -52,27 +52,28 @@ class Point:
 # Initial condition
 ####################################################################
 
-# given index ind and cube side length sLen, 'ravel' the index into 3D
+# given index ind and cube side length boundaryCondition, 'ravel' the index into 3D
 # as if the linear index numbered along the i direction, then j, then k
-def ravelCubicIndex(ind , sLen):
-    k = ( ind + 1) // ( sLen * sLen )
-    j = ( ind + 1 - k * sLen * sLen ) // sLen
-    i = ( ind + 1 - k * sLen * sLen - j * sLen )
+def ravelCubicIndex(ind , boundaryCondition):
+    k = ( ind + 1) // ( boundaryCondition.xMax * boundaryCondition.yMax )
+    j = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax ) // boundaryCondition.xMax
+    i = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax - j * boundaryCondition.xMax )
     return(i,j,k)
 
-def randomInitialDistribution( numTriplets , numSinglets , sideLength , occFunc , singlets , triplets):
+def randomInitialDistribution( numTriplets , numSinglets , occFunc , singlets , triplets, boundaryCondition):
     # sample N_excitons w/o replacement along the linearized index
-    unraveledLocations = np.random.choice(int(sideLength**3) , numSinglets + numTriplets , replace=False)
+    l = boundaryCondition.xMax * boundaryCondition.yMax * boundaryCondition.zMax
+    unraveledLocations = np.random.choice(int(l) , numSinglets + numTriplets , replace=False)
 
     # sample singlets
     for val in unraveledLocations[0:numSinglets]:
-        i,j,k = ravelCubicIndex(val , sideLength)
+        i,j,k = ravelCubicIndex(val , boundaryCondition)
         occFunc[ Point( i , j , k ) ] = False
         singlets[ Point( i , j , k ) ]  = True
 
     # sample triplets
     for val in unraveledLocations[numSinglets:numTriplets + numSinglets]:
-        i,j,k = ravelCubicIndex(val , sideLength)
+        i,j,k = ravelCubicIndex(val , boundaryCondition)
         occFunc[ Point( i , j , k ) ] = True
         triplets[ Point( i , j , k ) ] = True
 

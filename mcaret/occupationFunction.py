@@ -13,12 +13,13 @@ __author__ = "Kyle Beyer"
 from exciton import Point
 
 class OccupationFunction:
-    def __init__(self , numSinglets , numTriplets , initialConditionGenerator , sideLength ):
+    def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition ):
         self.occFunc = RandomDict() # map :  Point -> OccupationStatus
         self.singlets = RandomDict()
         self.triplets = RandomDict()
-        initialConditionGenerator( numSinglets  , numTriplets   , sideLength ,
-                                   self.occFunc , self.singlets , self.triplets )
+        self.boundaryCondition = boundaryCondition
+        initialConditionGenerator( numSinglets   , numTriplets   , self.occFunc ,
+                                   self.singlets , self.triplets , boundaryCondition )
 
     def checkStatus(self , p , tripletNeighbors , singletNeighbors):
         if p in self.occFunc:
@@ -149,17 +150,17 @@ class OccupationFunction:
 
         while successfulMove == False and numTries < 6:
             if directions[numTries] == 0:
-                i =  i + 1
+                i = self.boundaryCondition.incrementX(i)
             elif directions[numTries] == 1:
-                 i =  i - 1
+                i = self.boundaryCondition.decrementX(i)
             elif directions[numTries] == 2:
-                 j = j + 1
+                j = self.boundaryCondition.incrementY(j)
             elif directions[numTries] == 3:
-                 j = j - 1
+                j = self.boundaryCondition.decrementY(j)
             elif directions[numTries] == 4:
-                 k = k + 1
+                k = self.boundaryCondition.incrementZ(k)
             elif directions[numTries] == 5:
-                 k = k - 1
+                k = self.boundaryCondition.decrementZ(k)
 
             # increment try count
             numTries = numTries + 1
