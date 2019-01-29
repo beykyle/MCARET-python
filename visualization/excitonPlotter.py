@@ -14,6 +14,8 @@ from matplotlib.ticker import MaxNLocator
 import matplotlib.pylab as pylab
 
 def makePlot(ax , singlets , triplets):
+    singlets = list( singlets )
+    triplets = list( triplets )
 
     # lets plot our initial distribution
     for singlet in singlets:
@@ -26,9 +28,8 @@ def makePlot(ax , singlets , triplets):
     ax.scatter(triplets[0].i , triplets[0].j , triplets[0].k , marker="*" , c="k" , label="singlets")
     ax.scatter(singlets[0].i , singlets[0].j , singlets[0].k , marker="." , c="r" , label="triplets")
 
-    plt.legend()
+    plt.legend(loc='upper left')
     plt.show()
-
 
 def makeCommonAxis():
   # Now lets get our axes set up, so we can reuse them as we go
@@ -43,7 +44,7 @@ def makeCommonAxis():
   ax.xaxis.set_major_locator(MaxNLocator(integer=True))
   ax.zaxis.set_major_locator(MaxNLocator(integer=True))
 
-  params = {'legend.fontsize': 22,
+  params = {'legend.fontsize': 18,
             'axes.labelsize': 20,
             'xtick.labelsize':20,
             'ytick.labelsize':20}
