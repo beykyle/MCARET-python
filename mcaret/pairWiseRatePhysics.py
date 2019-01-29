@@ -24,47 +24,46 @@ from occupationFunction import OccupationFunction
 # direct neighbors in the lattice
 
 class PairWiseRatePhysics:
-    def __init__(self , k_fluorescence , k_phosphorescence , k_TT_annhilation , k_SS_quench , k_transport ):
-        self.k_fluorescence = k_fluorescence
-        self.k_phosphorescence = k_phosphorescence
-        self.k_TT_annhilation = k_TT_annhilation
-        self.k_SS_quench = k_SS_quench
-        self.k_transport = k_transport
+    def __init__(self , kFluorescence , kPhosphorescence , kTripletAnnhilation , kSingletQuench , kTransport ):
+        self.kFluorescence = kFluorescence
+        self.kPhosphorescence = kPhosphorescence
+        self.kTripletAnnhilation = kTripletAnnhilation
+        self.kSingletQuench = kSingletQuench
+        self.kTransport = kTransport
 
     # simply gets the number of direct triplet neighbors and direct singlet neighbors
     # Linear time - runs through all occupied points and checks for neighbors with
     # constant time lookups at each one
 
     def getRates(self, occFunc ):
-        num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs = occFunc.getPairwiseRateMultipliers()
+        numSinglets,  numTriplets , numSingletPairs , numTripletPairs = occFunc.getPairwiseRateMultipliers()
         # calculate rates, populating rate array
-        rates = np.array([ self.fluorescenceRate(num_singlets)              , \
-                           self.phosphorescenceRate(num_triplets)           , \
-                           self.TT_annhilationRate( num_triplet_pairs )     , \
-                           self.SS_quenchRate( num_singlet_pairs )          , \
-                           self.transportRate( num_singlets + num_triplets)  ])
+        rates = np.array([ self.fluorescenceRate(numSinglets)             , \
+                           self.phosphorescenceRate(numTriplets)          , \
+                           self.TT_annhilationRate( numTripletPairs )     , \
+                           self.SS_quenchRate( numSingletPairs )          , \
+                           self.transportRate( numSinglets + numTriplets)  ])
         return(rates)
 
     # fluorescence is a linear rate
-    def fluorescenceRate(self ,  num_singlets ):
-        return( self.k_fluorescence * num_singlets)
+    def fluorescenceRate(self ,  numSinglets ):
+        return( self.kFluorescence * numSinglets)
 
     # TT annhilation is a quadratic rate
-    def TT_annhilationRate(self ,  num_TT_pairs ):
-        return( self.k_TT_annhilation * num_TT_pairs)
+    def TT_annhilationRate(self ,  numTripletPairs ):
+        return( self.kTripletAnnhilation * numTripletPairs)
 
     # SS quenching is a quadratic rate
-    def SS_quenchRate(self ,  num_SS_pairs ):
-        return( self.k_SS_quench * num_SS_pairs )
+    def SS_quenchRate(self ,  numSingletPairs ):
+        return( self.kSingletQuench * numSingletPairs )
 
     # phosphorescence is a linear rate
-    def phosphorescenceRate( self ,  num_triplets ):
-        return( self.k_phosphorescence * num_triplets )
+    def phosphorescenceRate( self ,  numTriplets ):
+        return( self.kPhosphorescence * numTriplets )
 
     # for now we will model transport as a constant scalar rate
-    def transportRate(self , num_excitons):
-        return( self.k_transport * num_excitons )
-
+    def transportRate(self , numExcitons):
+        return( self.kTransport * numExcitons )
 
 ####################################################################
 #
@@ -74,41 +73,37 @@ class PairWiseRatePhysics:
 def readRateConstants( config ):
     if 'Rate Constants' in config:
         if 'fluorescence' in config['Rate Constants']:
-            k_fluorescence = float(config['Rate Constants']['fluorescence'])
+            kFluorescence = float(config['Rate Constants']['fluorescence'])
         else:
             print("No fluorescence rate constant found")
             exit(1)
 
         if 'phosphorescence' in config['Rate Constants']:
-            k_phosphorescence = float(config['Rate Constants']['phosphorescence'])
+            kPhosphorescence = float(config['Rate Constants']['phosphorescence'])
         else:
             print("No phosphorescence rate constant found")
             exit(1)
 
         if 'TT_annhilation' in config['Rate Constants']:
-            k_TT_annhilation = float(config['Rate Constants']['TT_annhilation'])
+            kTripletAnnhilation = float(config['Rate Constants']['TT_annhilation'])
         else:
             print("No TT annhilation  rate constant found")
             exit(1)
 
         if 'SS_quench' in config['Rate Constants']:
-            k_SS_quench = float(config['Rate Constants']['SS_quench'])
+            kSingletQuench = float(config['Rate Constants']['SS_quench'])
         else:
             print("No SS quench rate constant found")
             exit(1)
 
         if 'transport' in config['Rate Constants']:
-            k_transport = float(config['Rate Constants']['transport'] )
+            kTransport = float(config['Rate Constants']['transport'] )
         else:
             print("No transport rate constant found")
             exit(1)
-
     else:
         print("Rate Constants section not found")
         exit(1)
 
-    return( PairWiseRatePhysics(k_fluorescence , k_phosphorescence ,
-                                k_TT_annhilation , k_SS_quench , k_transport ) )
-
-
-
+    return( PairWiseRatePhysics(kFluorescence       , kPhosphorescence ,
+                                kTripletAnnhilation , kSingletQuench   , kTransport ) )

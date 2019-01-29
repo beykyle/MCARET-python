@@ -62,20 +62,20 @@ def ravelCubicIndex(ind , sLen):
 
 def randomInitialDistribution( numTriplets , numSinglets , sideLength , occFunc , singlets , triplets):
     # sample N_excitons w/o replacement along the linearized index
-    unraveled_locations = np.random.choice(int(sideLength**3) , numSinglets + numTriplets , replace=False)
+    unraveledLocations = np.random.choice(int(sideLength**3) , numSinglets + numTriplets , replace=False)
 
     # sample singlets
-    for val in unraveled_locations[0:numSinglets]:
+    for val in unraveledLocations[0:numSinglets]:
         i,j,k = ravelCubicIndex(val , sideLength)
         occFunc[ Point( i , j , k ) ] = False
         singlets[ Point( i , j , k ) ]  = True
 
     # sample triplets
-    for val in unraveled_locations[numSinglets:numTriplets + numSinglets]:
+    for val in unraveledLocations[numSinglets:numTriplets + numSinglets]:
         i,j,k = ravelCubicIndex(val , sideLength)
         occFunc[ Point( i , j , k ) ] = True
         triplets[ Point( i , j , k ) ] = True
 
-    #print("Plotting initial exciton distribution")
-    #fig , ax = excitonPlotter.makeCommonAxis()
-    #excitonPlotter.makePlot(ax , singlets , triplets)
+    print("Plotting initial exciton distribution")
+    fig , ax = excitonPlotter.makeCommonAxis()
+    excitonPlotter.makePlot(ax , singlets , triplets)

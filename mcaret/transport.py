@@ -18,15 +18,15 @@ import pairWiseRatePhysics
 
 
 # given the choice of next event, updates the occupation function and tallies light output
-def updateSystem( choice ,  occFunc , time , light_times):
+def updateSystem( choice ,  occFunc , time , lightTimes):
 
     if choice == 0:
         occFunc.eliminateRandomSinglet()
-        light_times.append(time)
+        lightTimes.append(time)
 
     elif choice == 1:
         occFunc.eliminateRandomTriplet()
-        light_times.append(time)
+        lightTimes.append(time)
 
     elif choice == 2:
         occFunc.tripletAnnhilate()
@@ -46,7 +46,7 @@ def updateSystem( choice ,  occFunc , time , light_times):
 def transport( N  , ratePhysics , occFunc ):
 
     # to reconstruct pulse shape, every light emission will be time tagged
-    light_times = []
+    lightTimes = []
 
     # start time at 0
     time = 0
@@ -67,7 +67,7 @@ def transport( N  , ratePhysics , occFunc ):
             print("System relaxed")
             break
 
-        occFunc , light_times = updateSystem( choice , occFunc , time , light_times )
+        occFunc , lightTimes = updateSystem( choice , occFunc , time , lightTimes )
 
-    return(light_times)
+    return(lightTimes)
 

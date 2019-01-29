@@ -14,7 +14,7 @@ from matplotlib.ticker import MaxNLocator
 import matplotlib.pylab as pylab
 
 def plotPulse( times ):
-  fig=plt.figure(figsize=(12, 10), dpi= 160, facecolor='w', edgecolor='k')
+  fig = plt.figure(figsize=(12, 10), dpi= 160, facecolor='w', edgecolor='k')
   ax = fig.add_subplot(111)
 
   ax.set_xlabel(r"time [a.u.]")

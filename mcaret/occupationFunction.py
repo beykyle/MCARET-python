@@ -8,8 +8,6 @@ import math
 import sys
 from randomdict import RandomDict
 
-
-
 __author__ = "Kyle Beyer"
 
 from exciton import Point
@@ -29,21 +27,20 @@ class OccupationFunction:
                 tripletNeighbors.append(p)
             else:
                 singletNeighbors.append(p)
-
         return( tripletNeighbors , singletNeighbors )
 
     # main exciton loop in pairwise transport
     def getPairwiseRateMultipliers(self):
-        num_singlets , num_triplets =  len(self.singlets) , len(self.triplets)
-        num_singlet_pairs , num_triplet_pairs = 0 , 0
+        numSinglets , numTriplets =  len(self.singlets) , len(self.triplets)
+        numSingletPairs , numTripletPairs = 0 , 0
         for point , status in self.occFunc.items():
-            singlet_neighbors , triplet_neighbors = self.checkForNeighbors( point.i , point.j , point.k )
+            singletNeighbors , tripletNeighbors = self.checkForNeighbors( point.i , point.j , point.k )
             if status: # Status == True -> triplet
-                num_triplet_pairs = num_triplet_pairs + len( triplet_neighbors )
+                numTripletPairs = numTripletPairs + len( tripletNeighbors )
             else: # staus == False -> singlet
-                num_singlet_pairs = num_singlet_pairs + len( singlet_neighbors )
+                numSingletPairs = numSingletPairs + len( singletNeighbors )
 
-        return(num_singlets,  num_triplets , num_singlet_pairs , num_triplet_pairs )
+        return(numSinglets,  numTriplets , numSingletPairs , numTripletPairs )
 
     def checkForNeighbors(self,  i , j , k ):
         singletNeighbors = []
