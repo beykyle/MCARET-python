@@ -98,6 +98,9 @@ class OccupationFunction:
         del self.occFunc[p]
         del self.triplets[p]
 
+    def constantSelectFromPair(self , excitonDisjointForest , singlet=True):
+        pass
+
     def linearSelectFromPair( self, excitonMap, singlet=True ):
         pairs = RandomDict()
         for key , val in excitonMap.items():
