@@ -39,7 +39,7 @@ def updateSystem( choice ,  occFunc , time , lightTimes):
         # For now, do not distinguish between triplets and singlets
         occFunc.randomExcitonRandomWalk()
 
-    return( occFunc , light_times)
+    return( occFunc , lightTimes)
 
 # given an initial condition in the form of a list of singlets and triplets
 # runs full kinetic monte carlo simualtion for N time steps
