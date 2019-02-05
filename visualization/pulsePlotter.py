@@ -26,4 +26,4 @@ def plotPulse( times ):
             'ytick.labelsize':20}
   pylab.rcParams.update(params)
   plt.hist(times , bins=100)
-  plt.show()
+  savefig('pulse.png')
