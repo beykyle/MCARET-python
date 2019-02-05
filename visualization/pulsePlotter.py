@@ -25,5 +25,5 @@ def plotPulse( times ):
             'xtick.labelsize':20,
             'ytick.labelsize':20}
   pylab.rcParams.update(params)
-  plt.hist(times)
+  plt.hist(times , bins=100)
   plt.show()
