@@ -14,32 +14,30 @@ from exciton import Point
 
 class OccupationFunction:
     def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition ):
-        self.occFunc = RandomDict() # map :  Point -> OccupationStatus
         self.singlets = RandomDict()
         self.triplets = RandomDict()
         self.boundaryCondition = boundaryCondition
-        initialConditionGenerator( numSinglets   , numTriplets   , self.occFunc ,
-                                   self.singlets , self.triplets , boundaryCondition )
+        initialConditionGenerator( numSinglets   , numTriplets , self.singlets ,
+                                   self.triplets , boundaryCondition )
 
     def checkStatus(self , p , tripletNeighbors , singletNeighbors):
-        if p in self.occFunc:
-            status = self.occFunc[p]
-            if status:
-                tripletNeighbors.append(p)
-            else:
-                singletNeighbors.append(p)
+        if p in self.singlets:
+            singletNeighbors.append(p)
+        elif p in self.triplets:
+            tripletNeighbors.append(p)
         return( tripletNeighbors , singletNeighbors )
 
     # main exciton loop in pairwise transport
     def getPairwiseRateMultipliers(self):
         numSinglets , numTriplets =  len(self.singlets) , len(self.triplets)
         numSingletPairs , numTripletPairs = 0 , 0
-        for point , status in self.occFunc.items():
+        for point in self.singlets:
             singletNeighbors , tripletNeighbors = self.checkForNeighbors( point.i , point.j , point.k )
-            if status: # Status == True -> triplet
-                numTripletPairs = numTripletPairs + len( tripletNeighbors )
-            else: # staus == False -> singlet
-                numSingletPairs = numSingletPairs + len( singletNeighbors )
+            numSingletPairs = numSingletPairs + len( singletNeighbors )
+
+        for point in self.triplets:
+            singletNeighbors , tripletNeighbors = self.checkForNeighbors( point.i , point.j , point.k )
+            numTripletPairs = numTripletPairs + len( tripletNeighbors )
 
         return(numSinglets,  numTriplets , numSingletPairs , numTripletPairs )
 
@@ -70,37 +68,13 @@ class OccupationFunction:
         ## Flourescence - S_1 -> S_0 + hnu
         # randomly select a singlet and remove it from occFunc
         p = self.singlets.random_key()
-
-        if p not in self.occFunc:
-            print("p not in occFunc!")
-            print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
-            print("length of occFunc:")
-            print(len(self.occFunc))
-            print("length of singlets:")
-            print(len(self.singlets))
-            print("contents of occFunc:")
-            for p , value in self.occFunc.items():
-                print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
-
-            print("Contents of singlets:")
-            for p , value in self.singlets.items():
-                print("(" + str(p.i) + "," + str(p.j) + "," + str(p.k) + ")")
-            print("  ")
-            if p not in self.singlets:
-                print("Impossible!")
-
-        del self.occFunc[p]
         del self.singlets[p]
 
     def eliminateRandomTriplet(self):
         ## Phosphorescence - T_1 -> S_0 + hnu
         # randomly select a triplet and remove it from occFunc
         p = self.triplets.random_key()
-        del self.occFunc[p]
         del self.triplets[p]
-
-    def constantSelectFromPair(self , excitonDisjointForest , singlet=True):
-        pass
 
     def linearSelectFromPair( self, excitonMap, singlet=True ):
         pairs = RandomDict()
@@ -121,25 +95,33 @@ class OccupationFunction:
         #SS quench - uniformly random sample one of the singlet pairs to annhilate
         pair = self.linearSelectFromPair(self.singlets ,  singlet=True)
         del self.singlets[pair]
-        del self.occFunc[pair]
 
     def tripletAnnhilate(self):
         #TT annhilate - uniformly random sample one of the triplet pairs to annhilate
         pair = self.linearSelectFromPair(self.triplets ,  singlet=False)
         del self.triplets[pair]
-        del self.occFunc[pair]
+
+    def chooseRandomExciton(self):
+        s = len(self.singlets)
+        t = len(self.triplets)
+        singlet = bool(np.random.choice(2,p=[s/(t+s) , t/(t+s)]) )
+        if singlet:
+            return( self.singlets.random_key() , True)
+        else:
+            return( self.triplets.random_key() , False)
 
     def randomExcitonRandomWalk(self):
-        p = self.occFunc.random_key()
-        while not self.randomDirectionSingleHop(p):
-            p = self.occFunc.random_key()
+        p , isSinglet = self.chooseRandomExciton()
+        while not self.randomDirectionSingleHop(p , singlet=isSinglet):
+            p , isSinglet = self.chooseRandomExciton()
 
     # Attempts to randomly chooose from the unoccupied indices directly
     # neighboring p. If succesful, deletes the value at p in self.occFunc
     # and add the same value at the randomly chosen, neighboring  point,
     # and returns True.
     # If there are no unnoccupied neighboring indices, returns False
-    def randomDirectionSingleHop( self , p ):
+    def randomDirectionSingleHop( self , p , singlet=True):
+
         i , j , k = p.i , p.j , p.k
         successfulMove = False
         numTries = 0
@@ -167,17 +149,15 @@ class OccupationFunction:
 
             # Check if new point is already occupied
             pNew = Point(i,j,k)
-            if pNew not in self.occFunc:
-                successfulMove = True
-                # delete the old point and make a new one
-                self.occFunc[pNew] = self.occFunc[p]
-                if self.occFunc[p]: # Triplet
-                    self.triplets[pNew] = True
-                    del self.triplets[p]
-                else:
+            if singlet: # point to hop is singlet
+                if pNew not in self.singlets:
+                    successfulMove = True
                     self.singlets[pNew] = True
                     del self.singlets[p]
-                del self.occFunc[p]
-
+            else: # point to hop is triplet
+                if pNew not in self.triplets:
+                    successfulMove = True
+                    self.triplets[pNew] = True
+                    del self.triplets[p]
 
         return(successfulMove)

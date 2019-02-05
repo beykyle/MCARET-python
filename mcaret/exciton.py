@@ -60,7 +60,7 @@ def ravelCubicIndex(ind , boundaryCondition):
     i = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax - j * boundaryCondition.xMax )
     return(i,j,k)
 
-def randomInitialDistribution( numTriplets , numSinglets , occFunc , singlets , triplets, boundaryCondition):
+def randomInitialDistribution( numTriplets , numSinglets , singlets , triplets, boundaryCondition):
     # sample N_excitons w/o replacement along the linearized index
     l = boundaryCondition.xMax * boundaryCondition.yMax * boundaryCondition.zMax
     unraveledLocations = np.random.choice(int(l) , numSinglets + numTriplets , replace=False)
@@ -68,15 +68,13 @@ def randomInitialDistribution( numTriplets , numSinglets , occFunc , singlets , 
     # sample singlets
     for val in unraveledLocations[0:numSinglets]:
         i,j,k = ravelCubicIndex(val , boundaryCondition)
-        occFunc[ Point( i , j , k ) ] = False
         singlets[ Point( i , j , k ) ]  = True
 
     # sample triplets
     for val in unraveledLocations[numSinglets:numTriplets + numSinglets]:
         i,j,k = ravelCubicIndex(val , boundaryCondition)
-        occFunc[ Point( i , j , k ) ] = True
         triplets[ Point( i , j , k ) ] = True
 
-    print("Plotting initial exciton distribution")
-    fig , ax = excitonPlotter.makeCommonAxis()
-    excitonPlotter.makePlot(ax , singlets , triplets)
+    #print("Plotting initial exciton distribution")
+    #fig , ax = excitonPlotter.makeCommonAxis()
+    #excitonPlotter.makePlot(ax , singlets , triplets)
