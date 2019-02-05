@@ -104,7 +104,7 @@ class OccupationFunction:
     def chooseRandomExciton(self):
         s = len(self.singlets)
         t = len(self.triplets)
-        singlet = bool(np.random.choice(2,p=[s/(t+s) , t/(t+s)]) )
+        singlet = np.random.choice([True , False], 1 ,p=[s/(t+s) , t/(t+s)])
         if singlet:
             return( self.singlets.random_key() , True)
         else:
