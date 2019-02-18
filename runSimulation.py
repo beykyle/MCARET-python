@@ -6,6 +6,7 @@
 import configparser
 import sys
 import math
+import numpy
 
 __author__ = "Kyle Beyer"
 
@@ -21,6 +22,11 @@ from exciton import randomInitialDistribution as randInit
 import excitonPlotter
 import pulsePlotter
 from occupationFunction import OccupationFunction
+
+def writeOutput( pulse , time , fname ):
+    with open(fname , 'w') as out:
+        for p , t in zip(pulse , time):
+            out.write("{0:.8e}".format(t) + " , " + "{0:.8e}".format(p) + "\n")
 
 def parseConfig( filename , required_fields ):
     print("Reading from " + filename )
@@ -78,8 +84,12 @@ def main():
     print("Running transport...")
     times = transport.transport( time_steps , rp , occFunc )
     print("Transport finished")
-    print("Plotting results...")
-    pulsePlotter.plotPulse( times )
+ #   print("Plotting results...")
+ #   pulsePlotter.plotPulse( times )
+    print("printing results...")
+    hist, bin_edges = numpy.histogram(times , bins=100)
+    #print(hist)
+    writeOutput(hist , bin_edges , "pulse.out")
 
 if __name__ == "__main__":
   main()
