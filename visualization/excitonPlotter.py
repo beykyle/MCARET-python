@@ -5,13 +5,15 @@
 
 import numpy as np
 import math
-
-__author__ = "Kyle Beyer"
-
+import matplotlib
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import MaxNLocator
 import matplotlib.pylab as pylab
+matplotlib.use('Agg')
+
+__author__ = "Kyle Beyer"
+
 
 def makePlot(ax , singlets , triplets):
     singlets = list( singlets )
