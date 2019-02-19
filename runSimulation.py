@@ -47,7 +47,7 @@ def main():
 
     filename = sys.argv[1]
 
-    required_fields = ['num_excitons' , 'triplet_fraction' ,  'time_steps'   ]
+    required_fields = ['num_excitons' , 'triplet_fraction' ,  'time_steps' , 'name'  ]
 
     config = parseConfig( filename , required_fields )
 
@@ -58,7 +58,9 @@ def main():
 
     time_steps = int( config['Setup']["time_steps"] )
 
-    print("Beginning simulation with " + str(num_triplets) + " triplets, and " + \
+    name = config['Setup']['name']
+
+    print("Beginning simulation " + name + " with " + str(num_triplets) + " triplets, and " + \
           str(num_singlets) + " singlets.")
     print("Running for " + str(time_steps) + " time steps")
 
@@ -76,7 +78,8 @@ def main():
     occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
 
     print("Running transport...")
-    times = transport.transport( time_steps , rp , occFunc )
+    outputfile = name + ".out"
+    transport.transport( time_steps , rp , occFunc , outputfile )
     print("Transport finished")
     print("Plotting results...")
     pulsePlotter.plotPulse( times )

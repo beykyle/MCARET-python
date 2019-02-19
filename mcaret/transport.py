@@ -10,6 +10,7 @@ __author__ = "Kyle Beyer"
 
 import exciton
 import pairWiseRatePhysics
+from state import State
 
 ####################################################################
 #
@@ -18,15 +19,17 @@ import pairWiseRatePhysics
 
 
 # given the choice of next event, updates the occupation function and tallies light output
-def updateSystem( choice ,  occFunc , time , lightTimes):
+def updateSystem( choice ,  occFunc , time ):
+
+    numDecays = 0
 
     if choice == 0:
         occFunc.eliminateRandomSinglet()
-        lightTimes.append(time)
+        numDecays = 1
 
     elif choice == 1:
         occFunc.eliminateRandomTriplet()
-        lightTimes.append(time)
+        numDecays = 1
 
     elif choice == 2:
         occFunc.tripletAnnhilate()
@@ -39,35 +42,34 @@ def updateSystem( choice ,  occFunc , time , lightTimes):
         # For now, do not distinguish between triplets and singlets
         occFunc.randomExcitonRandomWalk()
 
-    return( occFunc , lightTimes)
+    return( numDecays )
 
 # given an initial condition in the form of a list of singlets and triplets
 # runs full kinetic monte carlo simualtion for N time steps
-def transport( N  , ratePhysics , occFunc ):
+def transport( N  , ratePhysics , occFunc , outputFile ):
 
-    # to reconstruct pulse shape, every light emission will be time tagged
-    lightTimes = []
+    # open output file
+    with open(outputFile , "a") as output_file_object:
 
-    # start time at 0
-    time = 0
+      # start time at 0
+      time = 0
 
-    for i in range(N):
-        # calculate rates
-        rates = ratePhysics.getRates( occFunc )
+      for i in range(N):
+          # calculate rates
+          rates = ratePhysics.getRates( occFunc )
 
-        # get total rate and sample timestep from an exponential distribution
-        totalRate = sum(rates)
-        time = time - np.log( np.random.rand() ) / totalRate
+          # get total rate and sample timestep from an exponential distribution
+          totalRate = sum(rates)
+          time = time - np.log( np.random.rand() ) / totalRate
 
-        # select process from individual rates
-        rates = rates / totalRate
-        choice = np.random.choice(5, p=rates)
+          # select process from individual rates
+          rates = rates / totalRate
+          choice = np.random.choice(5, p=rates)
 
-        if totalRate == 0:
-            print("System relaxed")
-            break
+          if totalRate == 0:
+              print("System relaxed")
+              break
 
-        occFunc , lightTimes = updateSystem( choice , occFunc , time , lightTimes )
-
-    return(lightTimes)
-
+          numDecays = updateSystem( choice , occFunc , time )
+          state = occFunc.getCurrentState(time , numDecays)
+          state.printStateLine( output_file_object )

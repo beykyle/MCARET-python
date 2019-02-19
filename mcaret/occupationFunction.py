@@ -11,6 +11,7 @@ from randomdict import RandomDict
 __author__ = "Kyle Beyer"
 
 from exciton import Point
+from state import State
 
 class OccupationFunction:
     def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition ):
@@ -26,6 +27,9 @@ class OccupationFunction:
         elif p in self.triplets:
             tripletNeighbors.append(p)
         return( tripletNeighbors , singletNeighbors )
+
+    def getCurrentState(self , time , numDecays):
+        return( State(time , len(self.singlets) , len(self.triplets) , numDecays) )
 
     # main exciton loop in pairwise transport
     def getPairwiseRateMultipliers(self):
