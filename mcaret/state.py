@@ -25,3 +25,8 @@ class State:
               self.time , float(self.numSinglets) , float(self.numTriplets) , float(self.numDecays)
               )
             )
+
+    def readStateLine(string):
+        v = [float(x.strip().strip("\n")) for x in  string.split(",")]
+        return( v[0] , v[1] , v[2] , v[3] ) # time, num S , num T ,  decays
+
