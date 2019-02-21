@@ -83,16 +83,10 @@ def main():
     print("Generating initial condition...")
     occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
 
-    print("Running transport...")
     outputfile = name + ".out"
+    print("Running transport, printing results to " + outputfile + "...")
     transport.transport( time_steps , rp , occFunc , outputfile )
     print("Transport finished")
- #   print("Plotting results...")
- #   pulsePlotter.plotPulse( times )
-    print("printing results...")
-    hist, bin_edges = numpy.histogram(times , bins=100)
-    #print(hist)
-    writeOutput(hist , bin_edges , "pulse.out")
 
 if __name__ == "__main__":
   main()
