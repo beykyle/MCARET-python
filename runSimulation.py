@@ -83,8 +83,8 @@ def main():
     print("Generating initial condition...")
     occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
 
-    print("Running transport...")
     outputfile = name + ".out"
+    print("Running transport, printing results to " + outputfile + "...")
     transport.transport( time_steps , rp , occFunc , outputfile )
     print("Transport finished")
 
