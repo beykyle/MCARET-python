@@ -60,7 +60,7 @@ def ravelCubicIndex(ind , boundaryCondition):
     i = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax - j * boundaryCondition.xMax )
     return(i,j,k)
 
-def randomInitialDistribution( numTriplets , numSinglets , singlets , triplets, boundaryCondition):
+def randomInitialDistribution( numSinglets , numTriplets , singlets , triplets, boundaryCondition):
     # sample N_excitons w/o replacement along the linearized index
     l = boundaryCondition.xMax * boundaryCondition.yMax * boundaryCondition.zMax
     unraveledLocations = np.random.choice(int(l) , numSinglets + numTriplets , replace=False)
