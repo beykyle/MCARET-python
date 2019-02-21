@@ -87,12 +87,6 @@ def main():
     outputfile = name + ".out"
     transport.transport( time_steps , rp , occFunc , outputfile )
     print("Transport finished")
- #   print("Plotting results...")
- #   pulsePlotter.plotPulse( times )
-    print("printing results...")
-    hist, bin_edges = numpy.histogram(times , bins=100)
-    #print(hist)
-    writeOutput(hist , bin_edges , "pulse.out")
 
 if __name__ == "__main__":
   main()

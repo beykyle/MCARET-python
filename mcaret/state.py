@@ -3,7 +3,6 @@
 """@package state
 """
 
-
 __author__ = "Kyle Beyer"
 
 
