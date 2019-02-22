@@ -71,7 +71,7 @@ def randomInitialDistribution( numSinglets , numTriplets , singlets , triplets, 
         singlets[ Point( i , j , k ) ]  = True
 
     # sample triplets
-    for val in unraveledLocations[numSinglets:numTriplets + numSinglets]:
+    for val in unraveledLocations[numSinglets:(numTriplets + numSinglets)]:
         i,j,k = ravelCubicIndex(val , boundaryCondition)
         triplets[ Point( i , j , k ) ] = True
 
