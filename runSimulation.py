@@ -61,7 +61,6 @@ def main():
                          float(config['Setup']["triplet_fraction"] ) ) )
     num_singlets =  int( math.floor( float(config['Setup']['num_excitons']) *
                          ( 1 - float(config['Setup']["triplet_fraction"] ) ) ) )
-
     time_steps = int( config['Setup']["time_steps"] )
 
     name = config['Setup']['name']

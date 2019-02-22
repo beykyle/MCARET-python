@@ -19,11 +19,10 @@ class State:
         self.numDecays = numDecays
 
     def printStateLine(self , output_file_object ):
-        output_file_object.write(
-            "{:1.8E} , {:1.8E} , {:1.8E} , {:1.8E}\n".format(
-              self.time , float(self.numSinglets) , float(self.numTriplets) , float(self.numDecays)
-              )
-            )
+        ostr = "{:1.8E} , {:1.8E} , {:1.8E} , {:1.8E}\n".format(
+              self.time , float(self.numSinglets) , float(self.numTriplets) , float(self.numDecays) )
+        print(ostr)
+        output_file_object.write(ostr)
 
     def readStateLine(string):
         v = [float(x.strip().strip("\n")) for x in  string.split(",")]
