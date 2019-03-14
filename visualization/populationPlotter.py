@@ -74,18 +74,18 @@ def plotPulse( fname ):
 
     ax2 = ax1.twinx()
 
-    ax2.plot(time , numS , "b+", label="Singlets" )
-    ax2.plot(time , numT , "r+", label="Triplets" )
+    ax2.plot(time , numS , label="Singlets" , zorder=2)
+    ax2.plot(time , numT , label="Triplets" , zorder=3)
     ax2.set_ylabel('exciton population')
 
-    ax1.plot(x[:-1] , y  , "k." , label="pulse" , markersize=18)
+    ax1.plot(x[:-1] , y  , "k." , label="pulse" , markersize=12 , zorder=1)
     ax1.set_xlabel(r"time [a.u.]")
     ax1.set_ylabel(r"light-emitting decays")
+    ax1.legend(loc=1)
+    ax2.legend(loc=2)
 
-
-
-    plt.legend()
-    plt.savefig("pulse.pdf", dpi=None, facecolor='w', edgecolor='w',
+    fname = fname.replace('.out' , '')
+    plt.savefig(fname + ".pdf", dpi=None, facecolor='w', edgecolor='w',
         orientation='portrait', papertype=None, format=None,
         transparent=False, bbox_inches=None, pad_inches=0.1,
         frameon=None, metadata=None)

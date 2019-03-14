@@ -51,7 +51,7 @@ class PairWiseRatePhysics:
 
     # TT annhilation is a quadratic rate
     def TT_annhilationRate(self ,  numTripletPairs ):
-        return( self.kTripletAnnhilation * numTripletPairs)
+        return( self.kTripletAnnhilation * numTripletPairs )
 
     # SS quenching is a quadratic rate
     def SS_quenchRate(self ,  numSingletPairs ):

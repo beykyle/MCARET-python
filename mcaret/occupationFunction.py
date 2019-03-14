@@ -95,14 +95,16 @@ class OccupationFunction:
         # select a pair and return
         return( pairs.random_key() )
 
-    def singletQuench(self):
+    def singletQuench(self): #S_1 + S_1 -> S_0 + S+0
         #SS quench - uniformly random sample one of the singlet pairs to annhilate
         pair = self.linearSelectFromPair(self.singlets ,  singlet=True)
         del self.singlets[pair]
 
-    def tripletAnnhilate(self):
+    def tripletAnnhilate(self): #T_1 + T_1 -> S_1 + S_0
         #TT annhilate - uniformly random sample one of the triplet pairs to annhilate
         pair = self.linearSelectFromPair(self.triplets ,  singlet=False)
+        # create a new singlet in its place
+        self.singlets[pair] = True
         del self.triplets[pair]
 
     def chooseRandomExciton(self):
