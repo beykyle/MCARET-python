@@ -60,7 +60,10 @@ def transport( N  , ratePhysics , occFunc , outputFile ):
 
           # get total rate and sample timestep from an exponential distribution
           totalRate = sum(rates)
-          time = time - np.log( np.random.rand() ) / totalRate
+          deltaT = - np.log( np.random.rand() ) / totalRate
+          if deltaT < 0:
+                print(totalRate)
+          time = time + deltaT
 
           # select process from individual rates
           rates = rates / totalRate
