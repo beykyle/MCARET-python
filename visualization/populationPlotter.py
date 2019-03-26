@@ -67,7 +67,7 @@ def plotPulse( fname ):
         if( dec[i] > 0 ):
             lightTimes.append(t)
 
-    y , x = np.histogram(lightTimes , bins=50)
+    y , x = np.histogram(lightTimes , bins=12)
 
     fig, ax1 = plt.subplots()
     pylab.rcParams.update(params)

@@ -7,6 +7,7 @@ import configparser
 import sys
 import math
 import numpy
+import os.path
 
 __author__ = "Kyle Beyer"
 
@@ -83,6 +84,12 @@ def main():
     occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
 
     outputfile = name + ".out"
+    i = 1
+    while os.path.isfile(outputfile):
+      print (outputfile + "already exists!")
+      outputfile = name + "_" + str(i) + ".out"
+      i = i + 1
+
     print("Running transport, printing results to " + outputfile + "...")
     transport.transport( time_steps , rp , occFunc , outputfile )
     print("Transport finished")

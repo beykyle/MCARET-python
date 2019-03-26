@@ -1,0 +1,16 @@
+Could not install packages due to an EnvironmentError: [Errno 2] No such file or directory: '/home/beykyle/.local/lib/python3.5/site-packages/pip-19.0.1.dist-info/METADATA'
+
+Traceback (most recent call last):
+  File "runSimulation.py", line 91, in <module>
+    main()
+  File "runSimulation.py", line 87, in main
+    transport.transport( time_steps , rp , occFunc , outputfile )
+  File "./mcaret/transport.py", line 76, in transport
+    numDecays = updateSystem( choice , occFunc , time )
+  File "./mcaret/transport.py", line 27, in updateSystem
+    occFunc.eliminateRandomSinglet()
+  File "./mcaret/occupationFunction.py", line 75, in eliminateRandomSinglet
+    del self.singlets[p]
+  File "/home/beykyle/.local/lib/python3.5/site-packages/randomdict.py", line 32, in __delitem__
+    raise KeyError
+KeyError

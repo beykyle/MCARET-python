@@ -1,0 +1,49 @@
+
+DATAPATH set to /home/clarkesd/DNNGMCNP/MCNPDATA
+
+PATH set to /usr/local/bin/:/usr/local/sbin/:/opt/moab/bin:/sw/arcts/centos7/cmake/3.5.2/bin:/sw/lsa/centos7/python-anaconda3/created-20170421/bin:/sw/arcts/centos7/openmpi/1.10.2-gcc-4.8.5/bin:/sw/arcts/centos7/intel/17.0.1-1/compilers_and_libraries_2017.1.132/linux/bin/intel64:/sw/arcts/centos7/allinea/reports-6.0.6/bin:/sw/arcts/centos7/openmpi/3.0.0-gcc-7.2.0/bin:/sw/arcts/centos7/gcc/7.2.0/bin:/sw/arcts/centos7/openmpi/1.10.2-intel-17.0.1-1/bin:/sw/arcts/centos7/allinea/forge-6.0.6/bin:/home/beykyle/openmc/build/bin:/home/beykyle/openmc/openmc:/home/beykyle/opt/bin:/home/beykyle/bin:/home/beykyle/openmc/scripts:/usr/local/bin:/usr/local/sbin:/opt/moab/bin:/sw/lsa/centos7/python-anaconda2/created-20170424/bin:/sw/arcts/centos7/matlab/R2016a-1/bin/glnxa64:/sw/arcts/centos7/matlab/R2016a-1/bin:/sw/arcts/centos7/openmpi/1.6.5-gcc-4.8.5/bin:/sw/arcts/centos7/hdf5/1.8.16-gcc-4.8.5/bin:/usr/lib64/qt-3.3/bin:/sw/arcts/centos7/hpc-utils/bin:/usr/bin:/usr/sbin:/opt/ibutils/bin:/home/clarkesd/DNNGMCNP/executables:/home/clarkesd/DNNGMCNP/executables/subroutines:/home/mruch/DNNG/executables:/home/mruch/DNNG/executables/subroutines:/home/mruch/MyExecutables:/home/clarkesd/DNNGMCNP/executables:/home/clarkesd/DNNGMCNP/executables/subroutines
+
+Thu Mar 14 00:58:06 EDT 2019
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       READ THIS READ THIS READ THIS READ THIS READ THIS READ THIS
+
+                         Nyx/Flux News:
+8/24/2016
+	If you are using a version of MPPost prior to 220t, please
+reconsider! There were major problems with some of the previous versions
+that led to bad, very bad, MPPost behavior! 
+
+MPPost_v220t is now the default version of MPPost used by ppp_finish.sh, 
+mpplaunch.sh, and mppmultid.sh.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+NEW NEWS!?!?!? OMG, that's like the first time in 3 years...
+See above if you use MPPost!!!!!!
+
+
+Requirement already satisfied: RandomDict in ./.local/lib/python3.5/site-packages (0.2.0)
+
+=================================================================================================== 
+=================================================================================================== 
+Running from /home/beykyle/mcaret-python
+DATAPATH: /home/clarkesd/DNNGMCNP/MCNPDATA
+
+=================================================================================================== 
+=================================================================================================== 
+Printing output file paths
+
+=================================================================================================== 
+=================================================================================================== 
+Executing python
+Reading from input/toy.ini
+Beginning simulation toy with 7500 triplets, and 2500 singlets.
+Running for 100000 time steps
+Reading rate constants...
+Reading boundary condition...
+Generating initial condition...
+Running transport, printing results to toy.out...
+PBS script finished
