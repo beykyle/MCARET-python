@@ -22,14 +22,14 @@ import excitonPlotter
 class Point:
     # constructor requires position in lattice
     def __init__(self, i,j,k):
-        self.i = i
-        self.j = j
-        self.k = k
+        self.i = int(i)
+        self.j = int(j)
+        self.k = int(k)
 
     # uses large primes to get a decent hash function
     # not injective but should minimize collisions
     def __hash__(self):
-        return hash( self.i + 32416189717 * ( self. j +  15487291 * self.k ) )
+        return hash( int(self.i) + 32416189717 * ( int(self. j) +  15487291 * int(self.k) ) )
 
     def __eq__(self , other ):
         if( other.i == self.i and other.j == self.j and other.k == self.k ):
@@ -75,6 +75,6 @@ def randomInitialDistribution( numSinglets , numTriplets , singlets , triplets, 
         i,j,k = ravelCubicIndex(val , boundaryCondition)
         triplets[ Point( i , j , k ) ] = True
 
-    #print("Plotting initial exciton distribution")
-    #fig , ax = excitonPlotter.makeCommonAxis()
-    #excitonPlotter.makePlot(ax , singlets , triplets)
+    print("Plotting initial exciton distribution")
+    fig , ax = excitonPlotter.makeCommonAxis()
+    excitonPlotter.makePlot(ax , singlets , triplets)

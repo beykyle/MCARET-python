@@ -82,9 +82,9 @@ class OccupationFunction:
 
     def linearSelectFromPair( self, excitonMap, singlet=True ):
         pairs = RandomDict()
+        neighbors = []
         for key , val in excitonMap.items():
             singletNeighbors , tripletNeighbors = self.checkForNeighbors(key.i  , key.j , key.k)
-            neighbors = []
             if singlet:
                 neighbors = singletNeighbors
             else:
@@ -127,8 +127,6 @@ class OccupationFunction:
     # and returns True.
     # If there are no unnoccupied neighboring indices, returns False
     def randomDirectionSingleHop( self , p , singlet=True):
-
-        i , j , k = p.i , p.j , p.k
         successfulMove = False
         numTries = 0
 
@@ -137,6 +135,7 @@ class OccupationFunction:
         directions = np.random.choice(6,6 , replace=False)
 
         while successfulMove == False and numTries < 6:
+            i , j , k = p.i , p.j , p.k
             if directions[numTries] == 0:
                 i = self.boundaryCondition.incrementX(i)
             elif directions[numTries] == 1:
@@ -160,6 +159,7 @@ class OccupationFunction:
                     successfulMove = True
                     self.singlets[pNew] = True
                     del self.singlets[p]
+
             else: # point to hop is triplet
                 if pNew not in self.triplets:
                     successfulMove = True
