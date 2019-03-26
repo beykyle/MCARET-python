@@ -6,7 +6,7 @@
 import numpy as np
 import math
 import sys
-from randomdict import RandomDict
+from beykylerandomdict import RandomDict
 
 __author__ = "Kyle Beyer"
 
