@@ -1,6 +1,6 @@
 # MCArET-Py  
 ## Monte Carlo Aromatic-molecular Exciton Transport: Python version
-This repository is the next step in the evolution of MCArEt. 
+This repository is the next step in the evolution of `MCArEt`. 
 It evolves a specified distribution of singlet and triplet molecular excitations on a crystal latticem, in a fully analog kinetic Monte Carlo simulation, and tracks transport and light output.
 It assumes fully Markovian behavior, and evolves excitons through the following processes:
  1) singlet flourescence (S_1 -> S_0 + hnu)
