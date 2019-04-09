@@ -75,6 +75,6 @@ def randomInitialDistribution( numSinglets , numTriplets , singlets , triplets, 
         i,j,k = ravelCubicIndex(val , boundaryCondition)
         triplets[ Point( i , j , k ) ] = True
 
-    print("Plotting initial exciton distribution")
-    fig , ax = excitonPlotter.makeCommonAxis()
-    excitonPlotter.makePlot(ax , singlets , triplets)
+    #print("Plotting initial exciton distribution")
+    #fig , ax = excitonPlotter.makeCommonAxis()
+    #excitonPlotter.makePlot(ax , singlets , triplets)
