@@ -86,7 +86,7 @@ def main():
     outputfile = name + ".out"
     i = 1
     while os.path.isfile(outputfile):
-      print (outputfile + "already exists!")
+      print (outputfile + " already exists!")
       outputfile = name + "_" + str(i) + ".out"
       i = i + 1
 

@@ -20,6 +20,8 @@ class OccupationFunction:
         self.boundaryCondition = boundaryCondition
         initialConditionGenerator( numSinglets   , numTriplets , self.singlets ,
                                    self.triplets , boundaryCondition )
+        self.oldPoint = Point(0,0,0)
+        self.newPoint = Point(0,0,0)
 
     def printInitialCondition( self , outputfile ):
         outputfile.write("Initial Condition\n")
