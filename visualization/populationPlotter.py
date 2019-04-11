@@ -78,7 +78,7 @@ def plotPulse( fname ):
     ax2.plot(time , numT , label="Triplets" , zorder=3)
     ax2.set_ylabel('exciton population')
 
-    ax1.plot(x[:-1] , y  , "k." , label="pulse" , markersize=12 , zorder=1)
+    ax1.step(x[:-1] , y  , 'k' ,  label="pulse" , zorder=1)
     ax1.set_xlabel(r"time [a.u.]")
     ax1.set_ylabel(r"light-emitting decays")
     ax1.legend(loc=1)

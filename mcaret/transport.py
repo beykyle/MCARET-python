@@ -70,10 +70,6 @@ def transport( N  , ratePhysics , occFunc , outputFile ):
             rates = rates / totalRate
             choice = np.random.choice(5, p=rates)
 
-            if len(occFunc.singlets) == 0:
-                print("No remaining singlets")
-                break
-
             if totalRate == 0:
                 print("System relaxed")
                 break
