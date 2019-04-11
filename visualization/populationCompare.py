@@ -123,7 +123,7 @@ def createPlots( data , filenames ):
     # remove .out and underscore from names
     names = [ n.replace('.out' , '').replace("_" , " ") for n in filenames ]
     createSingletPlot( [ d['singlets'] for d in data ], [d['time'] for d in data ] , names  )
-    createTripletPlot( [ d['singlets'] for d in data ], [d['time'] for d in data ] , names  )
+    createTripletPlot( [ d['triplets'] for d in data ], [d['time'] for d in data ] , names  )
     createPulsePlot( [d['ptime'] for d in data], [d['pulse'] for d in data] , names )
 
 
