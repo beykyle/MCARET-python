@@ -50,33 +50,37 @@ def transport( N  , ratePhysics , occFunc , outputFile ):
 
     # open output file
     with open(outputFile , "a") as output_file_object:
+        occFunc.printInitialCondition( output_file_object  )
 
-      # start time at 0
-      time = 0
+        # start time at 0
+        time = 0
 
-      for i in range(N):
-          # calculate rates
-          rates = ratePhysics.getRates( occFunc )
+        for i in range(N):
+            # calculate rates
+            rates = ratePhysics.getRates( occFunc )
 
-          # get total rate and sample timestep from an exponential distribution
-          totalRate = sum(rates)
-          deltaT = - np.log( np.random.rand() ) / totalRate
-          if deltaT < 0:
-                print(totalRate)
-          time = time + deltaT
+            # get total rate and sample timestep from an exponential distribution
+            totalRate = sum(rates)
+            deltaT = - np.log( np.random.rand() ) / totalRate
+            if deltaT < 0:
+                  print(totalRate)
+            time = time + deltaT
 
-          # select process from individual rates
-          rates = rates / totalRate
-          choice = np.random.choice(5, p=rates)
+            # select process from individual rates
+            rates = rates / totalRate
+            choice = np.random.choice(5, p=rates)
 
-          if len(occFunc.singlets) == 0:
-              print("No remaining singlets")
-              break
+            if len(occFunc.singlets) == 0:
+                print("No remaining singlets")
+                break
 
-          if totalRate == 0:
-              print("System relaxed")
-              break
+            if totalRate == 0:
+                print("System relaxed")
+                break
 
-          numDecays = updateSystem( choice , occFunc , time )
-          state = occFunc.getCurrentState(time , numDecays)
-          state.printStateLine( output_file_object )
+            numDecays = updateSystem( choice , occFunc , time )
+            state = occFunc.getCurrentState(time , numDecays)
+            if choice == 4:
+                state.printTransportStateLine( output_file_object )
+            else:
+                state.printStateLine( output_file_object )

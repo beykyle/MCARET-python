@@ -43,6 +43,9 @@ class Point:
         else:
             return(True)
 
+    def __str__(self):
+        return ( "(" + str(self.i) + "," + str(self.j) + "," +  str(self.k) + ")" )
+
 # Point iterator
 # 0   ->   1   ->   2   ->  ...
 # ijk -> i+1jk -> i-1jk -> ij+1k -> ij-1k -> ijk+1 -> ijk-1

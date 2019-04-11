@@ -21,6 +21,17 @@ class OccupationFunction:
         initialConditionGenerator( numSinglets   , numTriplets , self.singlets ,
                                    self.triplets , boundaryCondition )
 
+    def printInitialCondition( self , outputfile ):
+        outputfile.write("Initial Condition\n")
+        outputfile.write("===========================================================================\n")
+        outputfile.write("singlets\n")
+        for s in self.singlets:
+            outputfile.write( str(s) + "\n" )
+        outputfile.write("triplets\n")
+        for t in self.triplets:
+            outputfile.write( str(t) + "\n" )
+        State.printHeader(outputfile)
+
     def checkStatus(self , p , tripletNeighbors , singletNeighbors):
         if p in self.singlets:
             singletNeighbors.append(p)
@@ -29,7 +40,7 @@ class OccupationFunction:
         return( tripletNeighbors , singletNeighbors )
 
     def getCurrentState(self , time , numDecays):
-        return( State(time , len(self.singlets) , len(self.triplets) , numDecays) )
+        return( State(time , len(self.singlets) , len(self.triplets) , numDecays , self.oldPoint , self.newPoint ) )
 
     # main exciton loop in pairwise transport
     def getPairwiseRateMultipliers(self):
@@ -159,11 +170,15 @@ class OccupationFunction:
                     successfulMove = True
                     self.singlets[pNew] = True
                     del self.singlets[p]
+                    self.oldPoint = p
+                    self.newPoint = pNew
 
             else: # point to hop is triplet
                 if pNew not in self.triplets:
                     successfulMove = True
                     self.triplets[pNew] = True
                     del self.triplets[p]
+                    self.oldPoint = p
+                    self.newPoint = pNew
 
         return(successfulMove)
