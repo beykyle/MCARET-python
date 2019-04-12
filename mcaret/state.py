@@ -41,6 +41,6 @@ class State:
             )
 
     def readStateLine(string):
-        v = [float(x.strip().strip("\n")) for x in  string.split(",")]
+        v = [float(x.strip().strip("\n")) for x in  string.split(",")[0:4]]
         return( v[0] , v[1] , v[2] , v[3] ) # time, num S , num T ,  decays
 
