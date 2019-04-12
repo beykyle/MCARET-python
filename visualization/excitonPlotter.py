@@ -20,16 +20,40 @@ def makePlot(ax , singlets , triplets):
 
     # lets plot our initial distribution
     for singlet in singlets:
-        ax.scatter(singlet.i , singlet.j , singlet.k , marker="*" , c="k" )
+        ax.scatter(singlet.i , singlet.j , singlet.k , marker="." , c="k" )
 
     for triplet in triplets:
         ax.scatter(triplet.i , triplet.j , triplet.k , marker="." , c="r" )
 
     # janky way to add legend
-    ax.scatter(triplets[0].i , triplets[0].j , triplets[0].k , marker="*" , c="k" , label="singlets")
+    ax.scatter(triplets[0].i , triplets[0].j , triplets[0].k , marker="." , c="k" , label="singlets")
     ax.scatter(singlets[0].i , singlets[0].j , singlets[0].k , marker="." , c="r" , label="triplets")
 
     plt.legend(loc='upper left')
+    ax.set_xlim(399900 , 400100)
+    ax.set_ylim(399900 , 400100)
+    ax.set_zlim(399900 , 400100)
+    plt.show()
+
+def makePlot(ax , singlets , triplets, start , end ):
+    singlets = list( singlets )
+    triplets = list( triplets )
+
+    # lets plot our initial distribution
+    for singlet in singlets:
+        ax.scatter(singlet.i , singlet.j , singlet.k , marker="." , c="k" )
+
+    for triplet in triplets:
+        ax.scatter(triplet.i , triplet.j , triplet.k , marker="." , c="r" )
+
+    # janky way to add legend
+    ax.scatter(triplets[0].i , triplets[0].j , triplets[0].k , marker="." , c="k" , label="singlets")
+    ax.scatter(singlets[0].i , singlets[0].j , singlets[0].k , marker="." , c="r" , label="triplets")
+
+    plt.legend(loc='upper left')
+    ax.set_xlim(start.i - 10, end.i+10)
+    ax.set_ylim(start.j - 10, end.j+ 10)
+    ax.set_zlim(start.k - 10, end.k+ 10)
     plt.show()
 
 def makeCommonAxis():

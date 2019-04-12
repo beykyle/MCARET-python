@@ -9,10 +9,6 @@ import sys
 
 __author__ = "Kyle Beyer"
 
-
-sys.path.append('./visualization/')
-import excitonPlotter
-
 ####################################################################
 #
 # Point definition
@@ -25,6 +21,10 @@ class Point:
         self.i = int(i)
         self.j = int(j)
         self.k = int(k)
+
+    def fromString( string ):
+        p = [ int(x.strip().rstrip("\n")) for x in string.split(",") ]
+        return( Point(p[0] , p[1] , p[2] ) )
 
     # uses large primes to get a decent hash function
     # not injective but should minimize collisions
@@ -50,34 +50,3 @@ class Point:
 # 0   ->   1   ->   2   ->  ...
 # ijk -> i+1jk -> i-1jk -> ij+1k -> ij-1k -> ijk+1 -> ijk-1
 
-####################################################################
-#
-# Initial condition
-####################################################################
-
-# given index ind and cube side length boundaryCondition, 'ravel' the index into 3D
-# as if the linear index numbered along the i direction, then j, then k
-def ravelCubicIndex(ind , boundaryCondition):
-    k = ( ind + 1) // ( boundaryCondition.xMax * boundaryCondition.yMax )
-    j = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax ) // boundaryCondition.xMax
-    i = ( ind + 1 - k * boundaryCondition.xMax * boundaryCondition.yMax - j * boundaryCondition.xMax )
-    return(i,j,k)
-
-def randomInitialDistribution( numSinglets , numTriplets , singlets , triplets, boundaryCondition):
-    # sample N_excitons w/o replacement along the linearized index
-    l = boundaryCondition.xMax * boundaryCondition.yMax * boundaryCondition.zMax
-    unraveledLocations = np.random.choice(int(l) , numSinglets + numTriplets , replace=False)
-
-    # sample singlets
-    for val in unraveledLocations[0:numSinglets]:
-        i,j,k = ravelCubicIndex(val , boundaryCondition)
-        singlets[ Point( i , j , k ) ]  = True
-
-    # sample triplets
-    for val in unraveledLocations[numSinglets:(numTriplets + numSinglets)]:
-        i,j,k = ravelCubicIndex(val , boundaryCondition)
-        triplets[ Point( i , j , k ) ] = True
-
-    #print("Plotting initial exciton distribution")
-    #fig , ax = excitonPlotter.makeCommonAxis()
-    #excitonPlotter.makePlot(ax , singlets , triplets)

@@ -15,11 +15,14 @@ from state import State
 
 class OccupationFunction:
     def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition ):
+        # initialize exciton population
+        self.boundaryCondition = boundaryCondition
         self.singlets = RandomDict()
         self.triplets = RandomDict()
-        self.boundaryCondition = boundaryCondition
-        initialConditionGenerator( numSinglets   , numTriplets , self.singlets ,
-                                   self.triplets , boundaryCondition )
+        initialConditionGenerator.sample( numSinglets   , numTriplets , self.singlets ,
+                                          self.triplets , plot=True )
+
+        # initialize state readout
         self.oldPoint = Point(0,0,0)
         self.newPoint = Point(0,0,0)
 

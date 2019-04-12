@@ -19,9 +19,9 @@ sys.path.append('./output/')
 import transport
 from pairWiseRatePhysics import PairWiseRatePhysics , readRateConstants
 from boundaryCondition import RectangularPeriodicBoundaryCondition , readBoundaryCondition
-from exciton import randomInitialDistribution as randInit
-import excitonPlotter
-import pulsePlotter
+from source import RandomRectangularSource
+from source import TrackSource
+from exciton import Point
 from occupationFunction import OccupationFunction
 
 def writeOutput( pulse , time , fname ):
@@ -81,7 +81,16 @@ def main():
 
     # generate occupation function
     print("Generating initial condition...")
-    occFunc = OccupationFunction( num_singlets , num_triplets , randInit , bc)
+    if config['Initial Condition']['type'] == "track":
+        source = TrackSource( Point.fromString(config['Initial Condition']['start']) ,
+                              Point.fromString(config['Initial Condition']['end'])   )
+    elif config['Initial Condition']['type'] == "random":
+        source = RandomRectangularSource( bc )
+    else:
+        print("Unknown initial distribution!")
+        exit(1)
+
+    occFunc = OccupationFunction( num_singlets , num_triplets , source , bc )
 
     outputfile = name + ".out"
     i = 1
