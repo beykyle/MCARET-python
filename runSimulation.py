@@ -81,6 +81,7 @@ def main():
 
     # generate occupation function
     print("Generating initial condition...")
+    plotSrc =  config['Setup']['plot_src'] in [ "True" , "true" , "T" , "t" , "yes" , "y" , "Yes" ]
     if config['Initial Condition']['type'] == "track":
         source = TrackSource( Point.fromString(config['Initial Condition']['start']) ,
                               Point.fromString(config['Initial Condition']['end'])   )
@@ -90,7 +91,7 @@ def main():
         print("Unknown initial distribution!")
         exit(1)
 
-    occFunc = OccupationFunction( num_singlets , num_triplets , source , bc )
+    occFunc = OccupationFunction( num_singlets , num_triplets , source , bc , plotSrc=plotSrc )
 
     outputfile = name + ".out"
     i = 1

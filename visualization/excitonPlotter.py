@@ -30,9 +30,6 @@ def makePlot(ax , singlets , triplets):
     ax.scatter(singlets[0].i , singlets[0].j , singlets[0].k , marker="." , c="r" , label="triplets")
 
     plt.legend(loc='upper left')
-    ax.set_xlim(399900 , 400100)
-    ax.set_ylim(399900 , 400100)
-    ax.set_zlim(399900 , 400100)
     plt.show()
 
 def makePlot(ax , singlets , triplets, start , end ):
@@ -50,10 +47,13 @@ def makePlot(ax , singlets , triplets, start , end ):
     ax.scatter(triplets[0].i , triplets[0].j , triplets[0].k , marker="." , c="k" , label="singlets")
     ax.scatter(singlets[0].i , singlets[0].j , singlets[0].k , marker="." , c="r" , label="triplets")
 
+    blim = min( start.i , start.j , start.k ) - 5
+    tlim = max( end.i , end.j , end.k ) + 5
+    ax.set_xlim(blim , tlim)
+    ax.set_ylim(blim , tlim)
+    ax.set_zlim(blim , tlim)
+
     plt.legend(loc='upper left')
-    ax.set_xlim(start.i - 10, end.i+10)
-    ax.set_ylim(start.j - 10, end.j+ 10)
-    ax.set_zlim(start.k - 10, end.k+ 10)
     plt.show()
 
 def makeCommonAxis():

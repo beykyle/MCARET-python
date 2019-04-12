@@ -53,7 +53,7 @@ class RandomRectangularSource(Source):
             triplets[ Point( i , j , k ) ] = True
 
         if plot:
-          print("Plotting initial exciton distribution")
+          print("Plotting initial exciton distribution...")
           fig , ax = excitonPlotter.makeCommonAxis()
           excitonPlotter.makePlot(ax , singlets , triplets)
 
@@ -62,43 +62,42 @@ class TrackSource(Source):
         self.start = start
         self.end = end
 
-    def randomRadialWalkResample(self,  excitons):
+    def randomRadialWalkResample(self,  excitons , otherexcitons):
         # sample an initial point on the chord between  start and end
         xch = np.random.choice( np.arange( self.start.i , self.end.i)  , 1 )
         ych = self.start.j + int((self.end.j - self.start.j) * ( xch - self.start.i ) / (self.end.i - self.start.i))
         zch = self.start.k + int((self.end.k - self.start.k) * ( xch - self.start.i ) / (self.end.i - self.start.i))
         e = Point( xch , ych , zch )
 
-        while e in excitons:
+        while e in excitons or e in otherexcitons:
             # choose i j or k to adjust up or down
-            ch = np.random.choice( [0,1,2,3,4,5] , 1 )
+            ch = np.random.choice( [0,1,2] , 1 )
+            delta = np.random.choice( [-1 , 1] , 1  )
             if ch == 0:
-                e.i = e.i + 1
+                e.i = e.i + delta
             if ch == 1:
-                e.i = e.i - 1
+                e.j = e.j + delta
             if ch == 2:
-                e.j = e.j + 1
-            if ch == 3:
-                e.j = e.j - 1
-            if ch == 4:
-                e.k = e.k + 1
-            if ch == 5:
-                e.k = e.k - 1
+                e.k = e.k + delta
 
         excitons[e] = True
 
     def sample(self , numSinglets , numTriplets , singlets , triplets, plot=True):
         # run until all the singlets and triplets have been populated
-        while( numSinglets > 0 and  numTriplets > 0 ):
+        while( numSinglets > 0 or  numTriplets > 0 ):
+            if ( numSinglets < 0 ):
+                numSinglets = 0
+            if ( numTriplets < 0 ):
+                numTriplets  = 0
             ptrip = numTriplets / ( numSinglets + numTriplets)
-            if bool( np.random.choice( [0 ,1] , 1 ,  p=[ ptrip , 1 - ptrip ] ) ): # if a triplet
+            if bool( np.random.choice( [1 ,0] , 1 ,  p=[ ptrip , 1 - ptrip ] ) ): # if a triplet
                 numTriplets = numTriplets - 1
-                self.randomRadialWalkResample( triplets  )
+                self.randomRadialWalkResample( triplets , singlets )
             else:
                 numSinglets = numSinglets - 1
-                self.randomRadialWalkResample( singlets)
+                self.randomRadialWalkResample( singlets , triplets)
 
         if plot:
-          print("Plotting initial exciton distribution")
+          print("Plotting initial exciton distribution...")
           fig , ax = excitonPlotter.makeCommonAxis()
           excitonPlotter.makePlot(ax , singlets , triplets, self.start , self.end)
