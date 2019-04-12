@@ -71,12 +71,13 @@ def getData( fname ):
         if( dec[i] > 0 ):
             lightTimes.append(t)
 
-    pulse , ptimes = np.histogram(lightTimes , bins=12)
+    pulse , ptimes = np.histogram(lightTimes , bins=150)
 
     return numS , numT , pulse , time , ptimes
 
 def createSingletPlot( times , pops , names ):
     fig = createPopPlot(times , pops , names )
+    plt.xlim(-0.1,20)
     plt.savefig("singlets.pdf", dpi=None, facecolor='w', edgecolor='w',
         orientation='portrait', papertype=None, format=None,
         transparent=False, bbox_inches=None, pad_inches=0.1,
@@ -85,6 +86,7 @@ def createSingletPlot( times , pops , names ):
 
 def createTripletPlot( times , pops , names ):
     fig = createPopPlot(times , pops , names )
+    plt.xlim(-1,40)
     plt.savefig("triplets.pdf", dpi=None, facecolor='w', edgecolor='w',
         orientation='portrait', papertype=None, format=None,
         transparent=False, bbox_inches=None, pad_inches=0.1,
@@ -101,6 +103,7 @@ def createPulsePlot( times , pulse , names ):
     plt.xlabel("Time [a.u.]")
     plt.ylabel("Pulse [light emissions / unit time]")
     plt.legend()
+    plt.xlim(-1,40)
     plt.savefig("pulse.pdf", dpi=None, facecolor='w', edgecolor='w',
         orientation='portrait', papertype=None, format=None,
         transparent=False, bbox_inches=None, pad_inches=0.1,
@@ -122,10 +125,9 @@ def createPopPlot( times ,  pops , names ):
 def createPlots( data , filenames ):
     # remove .out and underscore from names
     names = [ n.replace('.out' , '').replace("_" , " ") for n in filenames ]
-    createSingletPlot( [ d['singlets'] for d in data ], [d['time'] for d in data ] , names  )
-    createTripletPlot( [ d['triplets'] for d in data ], [d['time'] for d in data ] , names  )
+    createSingletPlot( [d['time'] for d in data ] , [ d['singlets'] for d in data ], names  )
+    createTripletPlot( [d['time'] for d in data ] , [ d['triplets'] for d in data ], names  )
     createPulsePlot( [d['ptime'] for d in data], [d['pulse'] for d in data] , names )
-
 
 def main():
 
