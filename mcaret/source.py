@@ -22,7 +22,7 @@ class Source:
     def __init__(self):
         pass
 
-    def sample(self , numSinglets , numTriplets , singlets , triplets , plot=True):
+    def sample(self , numSinglets , numTriplets , singlets , triplets , plot=False):
         pass
 
 class RandomRectangularSource(Source):
@@ -37,7 +37,7 @@ class RandomRectangularSource(Source):
         i = ( ind + 1 - k * self.boundaryCondition.xMax * self.boundaryCondition.yMax - j * self.boundaryCondition.xMax )
         return(i,j,k)
 
-    def sample(self,  numSinglets , numTriplets , singlets , triplets , plot=True):
+    def sample(self,  numSinglets , numTriplets , singlets , triplets , plot=False):
         # sample N_excitons w/o replacement along the linearized index
         l = self.boundaryCondition.xMax * self.boundaryCondition.yMax * self.boundaryCondition.zMax
         unraveledLocations = np.random.choice(int(l) , numSinglets + numTriplets , replace=False)
@@ -82,7 +82,7 @@ class TrackSource(Source):
 
         excitons[e] = True
 
-    def sample(self , numSinglets , numTriplets , singlets , triplets, plot=True):
+    def sample(self , numSinglets , numTriplets , singlets , triplets, plot=False):
         # run until all the singlets and triplets have been populated
         while( numSinglets > 0 or  numTriplets > 0 ):
             if ( numSinglets < 0 ):

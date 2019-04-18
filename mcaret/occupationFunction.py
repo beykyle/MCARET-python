@@ -14,7 +14,7 @@ from exciton import Point
 from state import State
 
 class OccupationFunction:
-    def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition , plotSrc=True):
+    def __init__(self , numSinglets , numTriplets , initialConditionGenerator , boundaryCondition , plotSrc=False):
         # initialize exciton population
         self.boundaryCondition = boundaryCondition
         self.singlets = RandomDict()
@@ -44,8 +44,8 @@ class OccupationFunction:
             tripletNeighbors.append(p)
         return( tripletNeighbors , singletNeighbors )
 
-    def getCurrentState(self , time , numDecays):
-        return( State(time , len(self.singlets) , len(self.triplets) , numDecays , self.oldPoint , self.newPoint ) )
+    def getCurrentState(self , time , numDecays, rates):
+        return( State(time , len(self.singlets) , len(self.triplets) , numDecays , self.oldPoint , self.newPoint , rates ) )
 
     # main exciton loop in pairwise transport
     def getPairwiseRateMultipliers(self):

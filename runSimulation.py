@@ -82,6 +82,7 @@ def main():
     # generate occupation function
     print("Generating initial condition...")
     plotSrc =  config['Setup']['plot_src'] in [ "True" , "true" , "T" , "t" , "yes" , "y" , "Yes" ]
+    print( "Plot source: " + str(plotSrc) )
     if config['Initial Condition']['type'] == "track":
         source = TrackSource( Point.fromString(config['Initial Condition']['start']) ,
                               Point.fromString(config['Initial Condition']['end'])   )

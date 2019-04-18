@@ -67,15 +67,15 @@ def transport( N  , ratePhysics , occFunc , outputFile ):
             time = time + deltaT
 
             # select process from individual rates
-            rates = rates / totalRate
-            choice = np.random.choice(5, p=rates)
+            norm_rates = rates / totalRate
+            choice = np.random.choice(5, p=norm_rates)
 
             if totalRate == 0:
                 print("System relaxed")
                 break
 
             numDecays = updateSystem( choice , occFunc , time )
-            state = occFunc.getCurrentState(time , numDecays)
+            state = occFunc.getCurrentState(time , numDecays , rates)
             if choice == 4:
                 state.printTransportStateLine( output_file_object )
             else:

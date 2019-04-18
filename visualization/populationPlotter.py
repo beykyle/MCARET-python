@@ -59,7 +59,7 @@ def plotPulse( fname ):
         if line == "Transport\n":
             break
 
-    for line in lines[i+3:]:
+    for line in lines[i+4:]:
         t , s , T , d = State.readStateLine(line)
         time.append(t)
         numS.append(s)
